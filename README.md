@@ -64,3 +64,40 @@ class Solution {
 - 空间复杂度：O(1)
 
 
+
+2.两两交换链表中的节点
+---
+
+### 思路
+
+1. 结果返回第二个节点
+2. 移动Prehead 到下一组
+
+### 代码
+
+```java
+class Solution {
+    public ListNode swapPairs(ListNode head) {
+        ListNode preHead = new ListNode(-1, head),res;
+        preHead.next = head;
+        res = head.next;
+        ListNode firstNode = head, secondNode, nextNode;
+        while(firstNode != null && firstNode.next != null){
+            secondNode = firstNode.next;
+            nextNode = secondNode.next;
+            firstNode.next = nextNode;
+            secondNode.next = firstNode;
+            preHead.next = secondNode;
+            preHead = firstNode;
+            firstNode = nextNode;
+        }
+        return res;
+        
+    }
+}
+```
+
+**复杂度分析**
+- 时间复杂度：O(n)
+- 空间复杂度：O(1)
+
