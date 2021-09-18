@@ -103,3 +103,152 @@ class Solution {
 - 时间复杂度：O(n)
 - 空间复杂度：O(1)
 
+
+3.翻转链表（二）
+---
+https://www.lintcode.com/problem/36/
+
+### 思路
+
+
+
+### 代码
+
+```java
+    public ListNode reverseBetween(ListNode head, int m, int n) {
+        // write your code here
+        ListNode dummy = new ListNode(0);
+        ListNode prev = dummy;
+        dummy.next = head;
+        for(int i = 0; i < m - 1; i++){
+            prev = prev.next;
+        }
+        ListNode start = prev.next, then = start.next;
+
+        for(int j = 0; j < n - m; j++){
+            start.next = then.next;
+            then.next = prev.next; //这里不是等于start
+            prev.next = then;
+            then = start.next;
+            // prev = start;
+        }
+        return dummy.next;
+
+    }
+
+```
+
+**复杂度分析**
+- 时间复杂度：O(n)
+- 空间复杂度：O(1)
+
+
+4.翻转链表
+---
+https://leetcode.com/problems/reverse-linked-list/
+
+### 思路
+
+
+
+### 代码
+
+```java
+class Solution {
+   public ListNode reverseList(ListNode head) {
+        ListNode prev = null;
+        while(head != null){
+            ListNode nextNode = head.next;
+            head.next = prev;
+            prev = head;
+            head = nextNode;
+        }
+        return prev;
+    }
+}
+```
+
+**复杂度分析**
+- 时间复杂度：O(n)
+- 空间复杂度：O(1)
+
+
+5.86. Partition List
+---
+https://leetcode.com/problems/partition-list/
+
+### 思路
+
+
+
+### 代码
+
+```java
+class Solution {
+    public ListNode partition(ListNode head, int x) {
+        ListNode smallHead = new ListNode(0);
+        ListNode bigHead = new ListNode(0);
+        ListNode small = smallHead, big = bigHead;
+        // smallHead.next = head;
+        // bigHead.next = head;
+        while(head != null){
+            if(head.val < x){
+                smallHead.next = head;
+                smallHead = head;  
+            }else {
+                bigHead.next = head;
+                bigHead = head;
+            }
+            head = head.next;
+        }
+        smallHead.next = big.next;
+        bigHead.next = null;
+        return small.next;
+    }
+}
+```
+
+**复杂度分析**
+- 时间复杂度：O(n)
+- 空间复杂度：O(1)
+
+
+### 6. 109. 有序链表转换二叉搜索树
+
+
+### 思路
+---
+
+1. 先找中点
+2. 在遍历左右
+
+### 代码
+
+```java
+public class Solution {
+public TreeNode sortedListToBST(ListNode head) {
+    if(head==null) return null;
+    return toBST(head,null);
+}
+public TreeNode toBST(ListNode head, ListNode tail){
+    ListNode slow = head;
+    ListNode fast = head;
+    if(head==tail) return null;
+    
+    while(fast!=tail&&fast.next!=tail){
+        fast = fast.next.next;
+        slow = slow.next;
+    }
+    TreeNode thead = new TreeNode(slow.val);
+    thead.left = toBST(head,slow); // 尾部节点 是null 这里难想
+    thead.right = toBST(slow.next,tail);
+    return thead;
+}
+
+```
+
+**复杂度分析**
+
+- 时间复杂度：O(nlogn)
+- 空间复杂度：O(nlogn)
+
