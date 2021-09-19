@@ -374,11 +374,211 @@ class Solution {
         return headNew;
     }
 }
-
+```
 
 **复杂度分析**
 
 - 时间复杂度：O(n)，其中 n 是链表的长度。我们只需要遍历该链表三次。读者们也可以自行尝试在计算拷贝节点的随机指针的同时计算其后继指针，这样只需要遍历两次。
 - 空间复杂度：O(1)，O(1)。注意返回值不计入空间复杂度。
 - 
+
+### 7. 102 · 带环链表（lint)
+
+
+### 思路
+---
+自己可能不按答案那样写
+
+### 代码
+
+```java
+public class Solution {
+    public Boolean hasCycle(ListNode head) {
+        if (head == null || head.next == null) {
+            return false;
+        }
+
+        ListNode fast, slow;
+        fast = head.next;
+        slow = head;
+        while (fast != slow) {
+            if(fast==null || fast.next==null)
+                return false;
+            fast = fast.next.next;
+            slow = slow.next;
+        } 
+        return true;
+    }
+}
+```
+
+**复杂度分析**
+
+- 时间复杂度：O(n)，
+- 空间复杂度：O(1)，
+- 
+
+
+
+### 7. 103 · 带环链表 II（lint)
+
+
+### 思路
+---
+使用双指针判断链表中是否有环，慢指针每次走一步，快指针每次走两步，若链表中有环，则两指针必定相遇。
+假设环的长度为l，环上入口距离链表头距离为a，两指针第一次相遇处距离环入口为b，则另一段环的长度为c=l-b，由于快指针走过的距离是慢指针的两倍，则有a+l+b=2*(a+b),又有l=b+c，可得a=c，故当判断有环时(slow==fast)时，移动头指针，同时移动慢指针，两指针相遇处即为环的入口。
+
+### 代码
+
+```java
+public class Solution {
+    /**
+     * @param head: The first node of linked list.
+     * @return: The node where the cycle begins. if there is no cycle, return null
+     */
+    public ListNode detectCycle(ListNode head) {
+        // write your code here
+        ListNode fast = head, slow = head;    //lintCode的答案不太对
+        while(fast != null && fast.next != null){
+            fast = fast.next.next;
+            slow = slow.next;
+            if(fast == slow){
+                while(head != slow){
+                    head = head.next;
+                    slow = slow.next;
+                }               
+            }
+        }
+        return slow;
+    }
+}
+```
+
+**复杂度分析**
+
+- 时间复杂度：O(n)，其中 NN 为链表中节点的数目。在最初判断快慢指针是否相遇时，slow 指针走过的距离不会超过链表的总长度；随后寻找入环点时，走过的距离也不会超过链表的总长度。因此，总的执行时间为 O(N)+O(N)=O(N)。
+- 空间复杂度：O(1)，
+
+### 7. 103 · 带环链表 II（lint)
+
+
+### 思路2
+---
+一个非常直观的思路是：我们遍历链表中的每个节点，并将它记录下来；一旦遇到了此前遍历过的节点，就可以判定链表中存在环。借助哈希表可以很方便地实现。
+
+### 代码
+
+```java
+public class Solution {
+    public ListNode detectCycle(ListNode head) {
+        ListNode pos = head;
+        Set<ListNode> visited = new HashSet<ListNode>();
+        while (pos != null) {
+            if (visited.contains(pos)) {
+                return pos;
+            } else {
+                visited.add(pos);
+            }
+            pos = pos.next;
+        }
+        return null;
+    }
+}
+
+作者：LeetCode-Solution
+链接：https://leetcode-cn.com/problems/linked-list-cycle-ii/solution/huan-xing-lian-biao-ii-by-leetcode-solution/
+来源：力扣（LeetCode）
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
+```
+
+**复杂度分析**
+
+- 时间复杂度：O(n)，
+- 空间复杂度：O(n)，
+
+### 8. 160. Intersection of Two Linked Lists
+
+### 思路1
+---
+判断两个链表是否相交，可以使用哈希集合存储链表节点。
+
+首先遍历链表 \textit{headA}headA，并将链表 \textit{headA}headA 中的每个节点加入哈希集合中。然后遍历链表 \textit{headB}headB，对于遍历到的每个节点，判断该节点是否在哈希集合中：
+
+如果当前节点不在哈希集合中，则继续遍历下一个节点；
+
+如果当前节点在哈希集合中，则后面的节点都在哈希集合中，即从当前节点开始的所有节点都在两个链表的相交部分，因此在链表 \textit{headB}headB 中遍历到的第一个在哈希集合中的节点就是两个链表相交的节点，返回该节点。
+
+如果链表 \textit{headB}headB 中的所有节点都不在哈希集合中，则两个链表不相交，返回 \text{null}null。
+
+
+### 代码
+
+```java
+public class Solution {
+    public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+        Set<ListNode> visited = new HashSet<ListNode>();
+        ListNode temp = headA;
+        while (temp != null) {
+            visited.add(temp);
+            temp = temp.next;
+        }
+        temp = headB;
+        while (temp != null) {
+            if (visited.contains(temp)) {
+                return temp;
+            }
+            temp = temp.next;
+        }
+        return null;
+    }
+}
+
+```
+
+**复杂度分析**
+
+- 时间复杂度：O(n + m)，
+- 空间复杂度：O(n)，
+
+### 思路2
+---
+
+为什么 a, b 指针相遇的点一定是相交的起始节点? 我们证明一下：
+
+将两条链表按相交的起始节点继续截断，链表 1 为: A + C，链表 2 为: B + C；
+
+当 a 指针将链表 1 遍历完后，重定位到链表 2 的头节点，然后继续遍历直至相交点，此时 a 指针遍历的距离为 A + C + B；
+
+同理 b 指针遍历的距离为 B + C + A；
+
+### 代码
+
+```java
+public class Solution {
+   public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+       while(headA != headB){
+           if(headA != null){
+               headA = headA.next;
+           }else{
+               headA =headB;
+           }
+           
+           if(headB != null){
+               headB = headB.next;
+           }else{
+               headB =headA;
+           }
+       }
+        return headA;
+    }
+}
+
+```
+
+**复杂度分析**
+
+- 时间复杂度：O(n + m)，
+- 空间复杂度：O(1)，
+
+
 
