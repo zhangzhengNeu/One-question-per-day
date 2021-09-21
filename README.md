@@ -688,8 +688,69 @@ public class LRUCache {
 **复杂度分析**
 - 时间复杂度：O(1)
 - 空间复杂度：链表占用空间 O(N)O(N)，哈希表占用空间也是 O(N)O(N)，因此总的空间复杂度为 O(N)O(N)，其中 N 为容量大小，也就是题目中的 capacity。
+
+
+### 10. 169. Majority Element
+
+### 思路1
+---
+我们维护一个候选众数 candidate 和它出现的次数 count。初始时 candidate 可以为任意值，count 为 0；
+
+
+### 代码
+
+```java
+public int majorityNumber(List<Integer> nums) {
+        // write your code here
+        int x = nums.get(0);
+        int num = 1;
+        for(int i = 1; i < nums.size(); i++){
+            if(num == 0){
+                x = nums.get(i);
+            }
+            if(nums.get(i) == x){
+                num ++;
+            } else if(nums.get(i) != x) {
+                num --;
+            }   
+        }
+        return x;                          
+    }
+
 ```
 
+**复杂度分析**
 
+- 时间复杂度：O(n)，
+- 空间复杂度：O(1)，
+
+
+ ### 思路2 遍历哈希表
+class Solution {
+    private Map<Integer, Integer> countNums(int[] nums) {
+        Map<Integer, Integer> counts = new HashMap<Integer, Integer>();
+        for (int num : nums) {
+            if (!counts.containsKey(num)) {
+                counts.put(num, 1);
+            } else {
+                counts.put(num, counts.get(num) + 1);
+            }
+        }
+        return counts;
+    }
+
+    public int majorityElement(int[] nums) {
+        Map<Integer, Integer> counts = countNums(nums);
+
+        Map.Entry<Integer, Integer> majorityEntry = null;
+        for (Map.Entry<Integer, Integer> entry : counts.entrySet()) {
+            if (majorityEntry == null || entry.getValue() > majorityEntry.getValue()) {
+                majorityEntry = entry;
+            }
+        }
+
+        return majorityEntry.getKey();
+    }
+}
 
 
