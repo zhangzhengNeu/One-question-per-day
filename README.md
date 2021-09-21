@@ -580,5 +580,116 @@ public class Solution {
 - 时间复杂度：O(n + m)，
 - 空间复杂度：O(1)，
 
+9.146. LRU 缓存机制
+https://leetcode-solution.cn/solutionDetail?type=3&id=12&max_id=2
+---
+
+### 思路
+1. 哈希表表记录前节点。
+2. 单向链表的节点，key，value两个值，就不用另一个hash表记录了
+### 代码
+
+```java
+public class LRUCache {
+    class ListNode{
+    public int key, val; //22
+    public ListNode next;
+        public ListNode(int key, int val){
+        this.key = key;
+        this.val = val;
+        this.next = null;
+        }
+    }
+    /*
+    * @param capacity: An integer
+    */
+    private Map<Integer, ListNode> keyToPrev ;///cc
+    private ListNode dummy = new ListNode(0, 0);
+    private ListNode tail = dummy;
+
+    private int capacity, size;
+
+    public LRUCache(int capacity) {
+        // do intialization if necessary
+        this.capacity = capacity; 
+        this.keyToPrev = new HashMap<>();
+    }
+    /*
+     * @param key: An integer
+     * @return: An integer
+     */
+    
+    public void moveToTail(int key){
+        ListNode prev = keyToPrev.get(key);
+        ListNode cur = prev.next;
+        if(cur == tail){
+            return;
+        }
+        prev.next = prev.next.next;//必须第一步；
+
+        tail.next = cur; //tail 一开始？链表怎么相连的？
+        cur.next = null;
+        
+
+        if (prev.next != null) { //zheli
+            keyToPrev.put(prev.next.key, prev);
+        }
+        keyToPrev.put(cur.key, tail);
+        tail = cur;
+    }
+
+    public int get(int key) {
+        if (!keyToPrev.containsKey(key)) {
+            return -1;
+        }
+        
+        moveToTail(key);
+        
+        // the key has been moved to the end
+        return tail.val;
+    }
+
+    /*
+     * @param key: An integer
+     * @param value: An integer
+     * @return: nothing
+     */
+    public void set(int key, int value) {
+        // get method will move the key to the end of the linked list
+        if (get(key) != -1) {
+            ListNode prev = keyToPrev.get(key);
+            prev.next.val = value;
+            return;
+        }
+        
+        if (size < capacity) {
+            size++;
+            ListNode curt = new ListNode(key, value);
+            tail.next = curt;
+            keyToPrev.put(key, tail);
+            
+            tail = curt;
+            return;
+        }
+        
+        // replace the first node with new key, value
+        ListNode first = dummy.next;
+        keyToPrev.remove(first.key);
+        
+        first.key = key;
+        first.val = value;
+        keyToPrev.put(key, dummy);
+        
+        moveToTail(key);
+    }
+}
+```
+
+**复杂度分析**
+- 时间复杂度：O(1)
+- 空间复杂度：链表占用空间 O(N)O(N)，哈希表占用空间也是 O(N)O(N)，因此总的空间复杂度为 O(N)O(N)，其中 N 为容量大小，也就是题目中的 capacity。
+```
+
+
 
 
